@@ -4,10 +4,11 @@ import { useActionState } from "react";
 import { submitTip } from "@/app/tips/[slug]/actions";
 import { CaptchaNotice, Field, inputClass, textareaClass } from "@/components/FormElements";
 
-export function TipForm() {
+export function TipForm({ caseSlug }: { caseSlug: string }) {
   const [state, formAction, pending] = useActionState(submitTip, { ok: false, message: "" });
   return (
     <form action={formAction} className="grid gap-4 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <input type="hidden" name="case_slug" value={caseSlug} />
       <Field label="Mensaje"><textarea name="message" className={textareaClass} required /></Field>
       <div className="grid gap-4 md:grid-cols-3">
         <Field label="Nombre opcional"><input name="sender_name" className={inputClass} /></Field>

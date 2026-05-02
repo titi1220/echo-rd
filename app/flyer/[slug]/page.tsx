@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getCaseBySlug } from "@/lib/data";
+import { getCaseBySlugFromSource } from "@/lib/supabase-data";
 import { formatDate } from "@/lib/utils";
 
 export default async function FlyerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const item = getCaseBySlug(slug);
+  const item = await getCaseBySlugFromSource(slug);
   if (!item) notFound();
 
   return (
@@ -23,7 +23,7 @@ export default async function FlyerPage({ params }: { params: Promise<{ slug: st
           <p>Vestimenta: {item.clothing_description}</p>
         </div>
         <p className="mt-6 rounded-xl bg-civic p-4 text-center text-2xl font-black text-white">Si tiene informacion: {item.contact_phone}</p>
-        <p className="mt-4 text-center text-sm font-bold text-slate-500">DATOS DEMO | Echo RD no reemplaza a las autoridades. En emergencia llame al 911.</p>
+        <p className="mt-4 text-center text-sm font-bold text-slate-500">Echo RD no reemplaza a las autoridades. En emergencia llame al 911.</p>
       </div>
       <script dangerouslySetInnerHTML={{ __html: "setTimeout(() => window.print(), 500)" }} />
     </main>

@@ -1,14 +1,14 @@
 import { CheckCircle2 } from "lucide-react";
 import { CaseCard } from "@/components/CaseCard";
-import { demoCases } from "@/lib/data";
+import { getFoundSafeCases } from "@/lib/supabase-data";
 
 export const metadata = {
   title: "Casos localizados",
   description: "Casos localizados sano y salvo en Echo RD."
 };
 
-export default function FoundSafePage() {
-  const cases = demoCases.filter((item) => item.status === "found_safe");
+export default async function FoundSafePage() {
+  const cases = await getFoundSafeCases();
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8 rounded-3xl bg-emerald-50 p-6 ring-1 ring-emerald-100">

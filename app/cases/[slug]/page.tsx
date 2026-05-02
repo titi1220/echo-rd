@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { AlertTriangle, CalendarDays, MapPin, MessageSquareWarning, Phone, ShieldCheck } from "lucide-react";
 import { Badge, StatusBadge } from "@/components/Badge";
 import { ShareButtons } from "@/components/ShareButtons";
-import { getCaseBySlug } from "@/lib/data";
+import { getCaseBySlugFromSource } from "@/lib/supabase-data";
 import { absoluteUrl, formatDate } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -14,7 +14,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const item = getCaseBySlug(slug);
+  const item = await getCaseBySlugFromSource(slug);
   if (!item) return {};
 
   const title = `${item.full_name} | Caso ${item.status === "urgent" ? "urgente" : "activo"}`;
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CaseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const item = getCaseBySlug(slug);
+  const item = await getCaseBySlugFromSource(slug);
   if (!item) notFound();
 
   const url = absoluteUrl(`/cases/${item.slug}`);

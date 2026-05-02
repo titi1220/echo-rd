@@ -1,14 +1,14 @@
 import { CaseCard } from "@/components/CaseCard";
 import { SearchFilters } from "@/components/SearchFilters";
-import { demoCases } from "@/lib/data";
+import { getActiveCases } from "@/lib/supabase-data";
 
 export const metadata = {
   title: "Casos activos",
   description: "Directorio de casos activos y urgentes en Echo RD."
 };
 
-export default function CasesPage() {
-  const cases = demoCases.filter((item) => ["active", "urgent"].includes(item.status));
+export default async function CasesPage() {
+  const cases = await getActiveCases();
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">

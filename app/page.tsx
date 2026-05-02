@@ -4,11 +4,12 @@ import { CaseCard } from "@/components/CaseCard";
 import { LiveMissingCount } from "@/components/LiveMissingCount";
 import { SearchFilters } from "@/components/SearchFilters";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { demoCases, resources } from "@/lib/data";
+import { getPublicCases, getResources } from "@/lib/supabase-data";
 
-export default function HomePage() {
-  const active = demoCases.filter((item) => item.status !== "found_safe");
-  const activeMissingCount = demoCases.filter((item) => ["active", "urgent"].includes(item.status)).length;
+export default async function HomePage() {
+  const [cases, resources] = await Promise.all([getPublicCases(), getResources()]);
+  const active = cases.filter((item) => item.status !== "found_safe");
+  const activeMissingCount = cases.filter((item) => ["active", "urgent"].includes(item.status)).length;
   const urgent = active.filter((item) => item.status === "urgent");
   const recent = [...active].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 3);
 

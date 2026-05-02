@@ -57,6 +57,20 @@ Run `supabase/schema.sql` in the Supabase SQL editor. Create private storage buc
 
 Keep `tip-media` and `sighting-media` private. Public pages must never expose submitter identity.
 
+Once Supabase environment variables are set, the app uses Supabase automatically for:
+
+- Homepage public cases and resources
+- Active cases directory
+- Dynamic case pages
+- Found/localized cases
+- Printable case afiches
+- Admin dashboard case/report/resource data
+- New missing-person reports inserted as `pending`
+- Private tips inserted into `tips`
+- Private reports inserted into `sightings`
+
+If Supabase variables are missing or a query fails, the app falls back to demo data so local development and Vercel preview deployments still work.
+
 ## Vercel deployment
 
 This project includes `vercel.json`. Vercel will run:
@@ -112,7 +126,7 @@ npm run vercel-build
 
 ## Production hardening checklist
 
-- Replace demo in-memory data with Supabase queries on public listing/detail pages.
+- Add Supabase Storage uploads for case photos, tip media, and report media.
 - Add Supabase SSR session validation for `/admin`.
 - Connect CAPTCHA verification in server actions.
 - Add Vercel KV, Upstash, or Supabase Edge Function rate limiting.

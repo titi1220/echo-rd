@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SightingForm } from "@/app/sightings/[slug]/SightingForm";
-import { getCaseBySlug } from "@/lib/data";
+import { getCaseBySlugFromSource } from "@/lib/supabase-data";
 
 export default async function SightingPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const item = getCaseBySlug(slug);
+  const item = await getCaseBySlugFromSource(slug);
   if (!item) notFound();
 
   return (
@@ -13,7 +13,7 @@ export default async function SightingPage({ params }: { params: Promise<{ slug:
       <Link href={`/cases/${item.slug}`} className="text-sm font-black text-royal">Volver al caso</Link>
       <h1 className="mt-3 text-4xl font-black tracking-tight text-civic">¿Lo viste? Reportar</h1>
       <p className="mt-3 leading-7 text-slate-600">Comparte detalles para el caso de {item.full_name}. El reporte permanece privado hasta ser revisado.</p>
-      <div className="mt-8"><SightingForm /></div>
+      <div className="mt-8"><SightingForm caseSlug={item.slug} /></div>
     </main>
   );
 }

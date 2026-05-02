@@ -1,7 +1,7 @@
 import { BarChart3, ClipboardCheck, Eye, FileClock, Lock, MessageSquare, ShieldCheck, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Badge, StatusBadge } from "@/components/Badge";
-import { demoCases, demoSightings, resources } from "@/lib/data";
+import { getAdminCases, getAdminSightings, getResources } from "@/lib/supabase-data";
 import { statusLabel } from "@/lib/utils";
 
 const priorityLabel: Record<string, string> = {
@@ -38,9 +38,10 @@ export const metadata = {
   description: "Panel administrativo seguro de Echo RD."
 };
 
-export default function AdminPage() {
-  const active = demoCases.filter((item) => ["active", "urgent"].includes(item.status)).length;
-  const found = demoCases.filter((item) => item.status === "found_safe").length;
+export default async function AdminPage() {
+  const [cases, sightings, resources] = await Promise.all([getAdminCases(), getAdminSightings(), getResources()]);
+  const active = cases.filter((item) => ["active", "urgent"].includes(item.status)).length;
+  const found = cases.filter((item) => item.status === "found_safe").length;
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -55,7 +56,7 @@ export default function AdminPage() {
 
       <section className="grid gap-4 md:grid-cols-5">
         {stats.map(([label, defaultValue, Icon]) => {
-          const value = label === "Casos activos" ? active : label === "Casos localizados" ? found : label === "Reportes" ? demoSightings.length : defaultValue;
+          const value = label === "Casos activos" ? active : label === "Casos localizados" ? found : label === "Reportes" ? sightings.length : defaultValue;
           return (
           <div key={String(label)} className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
             <Icon className="text-royal" />
@@ -73,7 +74,7 @@ export default function AdminPage() {
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="text-xs uppercase text-slate-500"><tr><th className="py-3">Caso</th><th>Estado</th><th>Provincia</th><th>Cola</th><th>Acciones</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
-                {demoCases.slice(0, 5).map((item, index) => (
+                {cases.slice(0, 5).map((item, index) => (
                   <tr key={item.id}>
                     <td className="py-4 font-black text-civic">{item.full_name}</td>
                     <td><StatusBadge status={item.status} /></td>
@@ -119,8 +120,8 @@ export default function AdminPage() {
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead className="text-xs uppercase text-slate-500"><tr><th className="py-3">Caso</th><th>Lugar</th><th>Fecha/hora</th><th>Archivos</th><th>Prioridad</th><th>Estado</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
-                {demoSightings.map((item) => {
-                  const related = demoCases.find((c) => c.id === item.case_id);
+                {sightings.map((item) => {
+                  const related = cases.find((c) => c.id === item.case_id);
                   return (
                     <tr key={item.id}>
                       <td className="py-4 font-black text-civic">{related?.full_name}</td>
@@ -148,7 +149,7 @@ export default function AdminPage() {
         <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
           <h2 className="flex items-center gap-2 text-xl font-black text-civic"><Users className="text-alert" /> Registro de actividad</h2>
           <div className="mt-5 grid gap-3 text-sm">
-            {demoCases.slice(0, 4).map((item) => (
+            {cases.slice(0, 4).map((item) => (
               <div key={item.id} className="rounded-xl bg-slate-50 p-3">
                 <p className="font-bold text-civic">admin_demo actualizo {item.full_name}</p>
                 <p className="text-slate-500">Accion: {statusLabel(item.status)} | Notas: revision interna registrada</p>
