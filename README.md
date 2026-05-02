@@ -65,7 +65,7 @@ This project includes `vercel.json`. Vercel will run:
 npm run vercel-build
 ```
 
-That command validates required environment variables, runs TypeScript, then runs `next build`.
+That command checks environment variables, runs TypeScript, then runs `next build`. Missing Supabase/CAPTCHA values are reported as warnings so the demo site can deploy before production services are connected.
 
 Set these variables in Vercel Project Settings > Environment Variables:
 
@@ -78,7 +78,7 @@ NEXT_PUBLIC_CAPTCHA_SITE_KEY=your-captcha-site-key
 CAPTCHA_SECRET_KEY=your-captcha-secret-key
 ```
 
-Required for production build:
+Required before public launch:
 
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`

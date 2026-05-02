@@ -13,13 +13,13 @@ if (!process.env.NEXT_PUBLIC_SITE_URL && !process.env.VERCEL_URL) {
 }
 
 if (missing.length > 0) {
-  console.error("\nMissing required production environment variables:");
+  console.warn("\nProduction environment variables not set:");
   for (const key of missing) {
-    console.error(`- ${key}`);
+    console.warn(`- ${key}`);
   }
-  console.error("\nAdd them in Vercel Project Settings > Environment Variables.");
-  console.error("For preview deployments, VERCEL_URL may be used as the site URL fallback.");
-  process.exit(1);
+  console.warn("\nThe app will deploy with demo data and local fallbacks.");
+  console.warn("Add these in Vercel Project Settings > Environment Variables before public launch.");
+  console.warn("For preview deployments, VERCEL_URL may be used as the site URL fallback.\n");
 }
 
 const missingOptional = optional.filter((key) => !process.env[key]);
