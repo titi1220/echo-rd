@@ -107,6 +107,17 @@ export async function getAdminSightings() {
   return data as Sighting[];
 }
 
+export async function getAdminTipCount() {
+  if (!hasSupabaseServerEnv()) {
+    return 0;
+  }
+
+  const supabase = createServerSupabaseClient();
+  const { count, error } = await supabase.from("tips").select("id", { count: "exact", head: true });
+  if (error) return 0;
+  return count ?? 0;
+}
+
 export async function getResources() {
   if (!hasSupabaseServerEnv()) {
     return demoResources;

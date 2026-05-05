@@ -5,7 +5,7 @@ import { AdminActionButton } from "@/components/AdminActionButton";
 import { Badge, StatusBadge } from "@/components/Badge";
 import { LogoutButton } from "@/components/LogoutButton";
 import { getCurrentAdmin } from "@/lib/supabase-auth";
-import { getAdminCases, getAdminSightings, getResources } from "@/lib/supabase-data";
+import { getAdminCases, getAdminSightings, getAdminTipCount, getResources } from "@/lib/supabase-data";
 import { statusLabel } from "@/lib/utils";
 
 const priorityLabel: Record<string, string> = {
@@ -31,9 +31,9 @@ const roles = [
 
 const stats: Array<[string, number, LucideIcon]> = [
   ["Casos activos", 0, ShieldCheck],
-  ["Casos pendientes", 3, FileClock],
+  ["Casos pendientes", 0, FileClock],
   ["Casos localizados", 0, ClipboardCheck],
-  ["Pistas recibidas", 14, MessageSquare],
+  ["Pistas recibidas", 0, MessageSquare],
   ["Reportes", 0, Eye]
 ];
 
@@ -43,9 +43,11 @@ export const metadata = {
 };
 
 export default async function AdminPage() {
-  const [admin, cases, sightings, resources] = await Promise.all([getCurrentAdmin(), getAdminCases(), getAdminSightings(), getResources()]);
+  const [admin, cases, sightings, tipCount, resources] = await Promise.all([getCurrentAdmin(), getAdminCases(), getAdminSightings(), getAdminTipCount(), getResources()]);
   const active = cases.filter((item) => ["active", "urgent"].includes(item.status)).length;
+  const pending = cases.filter((item) => item.status === "pending").length;
   const found = cases.filter((item) => item.status === "found_safe").length;
+  const canLogout = Boolean(admin && admin.id !== "demo-admin");
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -58,13 +60,24 @@ export default async function AdminPage() {
         <div className="rounded-2xl bg-civic p-4 text-white">
           <Lock className="mb-2" />
           <p className="text-sm font-bold">{admin ? `${admin.email} | ${admin.role}` : "Modo demo local"}</p>
-          {admin && <div className="mt-3"><LogoutButton /></div>}
+          {canLogout && <div className="mt-3"><LogoutButton /></div>}
         </div>
       </div>
 
       <section className="grid gap-4 md:grid-cols-5">
         {stats.map(([label, defaultValue, Icon]) => {
-          const value = label === "Casos activos" ? active : label === "Casos localizados" ? found : label === "Reportes" ? sightings.length : defaultValue;
+          const value =
+            label === "Casos activos"
+              ? active
+              : label === "Casos pendientes"
+                ? pending
+                : label === "Casos localizados"
+                  ? found
+                  : label === "Pistas recibidas"
+                    ? tipCount
+                    : label === "Reportes"
+                      ? sightings.length
+                      : defaultValue;
           return (
           <div key={String(label)} className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
             <Icon className="text-royal" />

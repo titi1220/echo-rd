@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { HeaderLiveCount } from "@/components/HeaderLiveCount";
+import { MobileMenu } from "@/components/MobileMenu";
 
 const nav = [
   ["Casos", "/cases"],
@@ -33,9 +34,7 @@ export function Header() {
             Panel
           </Link>
         </nav>
-        <Link href="/report" className="rounded-full bg-alert px-4 py-2 text-sm font-bold text-white shadow-lg shadow-red-900/15 md:hidden">
-          Reportar
-        </Link>
+        <MobileMenu />
       </div>
     </header>
   );
