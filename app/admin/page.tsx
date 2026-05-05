@@ -1,6 +1,10 @@
 import { BarChart3, ClipboardCheck, Eye, FileClock, Lock, MessageSquare, ShieldCheck, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { updateCaseStatus, updateSightingStatus } from "@/app/admin/actions";
+import { AdminActionButton } from "@/components/AdminActionButton";
 import { Badge, StatusBadge } from "@/components/Badge";
+import { LogoutButton } from "@/components/LogoutButton";
+import { getCurrentAdmin } from "@/lib/supabase-auth";
 import { getAdminCases, getAdminSightings, getResources } from "@/lib/supabase-data";
 import { statusLabel } from "@/lib/utils";
 
@@ -39,7 +43,7 @@ export const metadata = {
 };
 
 export default async function AdminPage() {
-  const [cases, sightings, resources] = await Promise.all([getAdminCases(), getAdminSightings(), getResources()]);
+  const [admin, cases, sightings, resources] = await Promise.all([getCurrentAdmin(), getAdminCases(), getAdminSightings(), getResources()]);
   const active = cases.filter((item) => ["active", "urgent"].includes(item.status)).length;
   const found = cases.filter((item) => item.status === "found_safe").length;
 
@@ -51,7 +55,11 @@ export default async function AdminPage() {
           <h1 className="mt-2 text-4xl font-black tracking-tight text-civic">Panel administrativo</h1>
           <p className="mt-3 max-w-2xl leading-7 text-slate-600">Acceso por roles para super administradores, moderadores y editores. Los datos sensibles nunca se exponen publicamente.</p>
         </div>
-        <div className="rounded-2xl bg-civic p-4 text-white"><Lock className="mb-2" /><p className="text-sm font-bold">Ruta protegida lista para seguridad</p></div>
+        <div className="rounded-2xl bg-civic p-4 text-white">
+          <Lock className="mb-2" />
+          <p className="text-sm font-bold">{admin ? `${admin.email} | ${admin.role}` : "Modo demo local"}</p>
+          {admin && <div className="mt-3"><LogoutButton /></div>}
+        </div>
       </div>
 
       <section className="grid gap-4 md:grid-cols-5">
@@ -80,7 +88,12 @@ export default async function AdminPage() {
                     <td><StatusBadge status={item.status} /></td>
                     <td>{item.province}</td>
                     <td>{["Reportes pendientes", "Necesita mas informacion", "Aprobado", "Rechazado", "Duplicado"][index]}</td>
-                    <td className="space-x-2"><button className="font-bold text-royal">Aprobar</button><button className="font-bold text-alert">Rechazar</button></td>
+                    <td className="space-x-2">
+                      <AdminActionButton action={updateCaseStatus.bind(null, item.id, "active")}>Aprobar</AdminActionButton>
+                      <AdminActionButton action={updateCaseStatus.bind(null, item.id, "urgent")} tone="red">Urgente</AdminActionButton>
+                      <AdminActionButton action={updateCaseStatus.bind(null, item.id, "found_safe")} tone="green">Localizado</AdminActionButton>
+                      <AdminActionButton action={updateCaseStatus.bind(null, item.id, "rejected")} tone="gray">Rechazar</AdminActionButton>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -129,7 +142,11 @@ export default async function AdminPage() {
                       <td>{item.date_seen} {item.time_seen}</td>
                       <td>{item.image_url ? "Imagen" : "Sin archivos"}</td>
                       <td><Badge tone={item.priority === "high" ? "red" : "blue"}>{priorityLabel[item.priority]}</Badge></td>
-                      <td>{sightingStatusLabel[item.status]}</td>
+                      <td className="space-x-2">
+                        <span>{sightingStatusLabel[item.status]}</span>
+                        <AdminActionButton action={updateSightingStatus.bind(null, item.id, "credible")} tone="green">Creible</AdminActionButton>
+                        <AdminActionButton action={updateSightingStatus.bind(null, item.id, "false_lead")} tone="red">Falsa</AdminActionButton>
+                      </td>
                     </tr>
                   );
                 })}

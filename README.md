@@ -49,13 +49,28 @@ npm run dev
 
 ## Supabase setup
 
-Run `supabase/schema.sql` in the Supabase SQL editor. Create private storage buckets for:
+Run `supabase/schema.sql` in the Supabase SQL editor. The script creates the database tables and attempts to create these storage buckets:
 
 - `case-photos`
 - `tip-media`
 - `sighting-media`
 
 Keep `tip-media` and `sighting-media` private. Public pages must never expose submitter identity.
+
+If the SQL editor reports that `storage.buckets` is unavailable, create the buckets manually in Supabase Storage with the same names.
+
+To create your first admin:
+
+1. Go to Supabase Auth > Users and create a user.
+2. Copy that user's UUID.
+3. Insert that UUID into `public.admins`:
+
+```sql
+insert into public.admins (id, email, role)
+values ('USER_UUID_HERE', 'admin@example.com', 'super_admin');
+```
+
+Admin login is available at `/admin/login`. The `/admin` route requires a Supabase session when Supabase env vars are configured.
 
 Once Supabase environment variables are set, the app uses Supabase automatically for:
 
@@ -68,6 +83,9 @@ Once Supabase environment variables are set, the app uses Supabase automatically
 - New missing-person reports inserted as `pending`
 - Private tips inserted into `tips`
 - Private reports inserted into `sightings`
+- Case photo upload to `case-photos`
+- Private tip/report media upload to `tip-media` and `sighting-media`
+- Admin moderation actions for approving, marking urgent, marking found, rejecting, and reviewing reports
 
 If Supabase variables are missing or a query fails, the app falls back to demo data so local development and Vercel preview deployments still work.
 
@@ -76,10 +94,10 @@ If Supabase variables are missing or a query fails, the app falls back to demo d
 This project includes `vercel.json`. Vercel will run:
 
 ```bash
-npm run vercel-build
+npm run build
 ```
 
-That command checks environment variables, runs TypeScript, then runs `next build`. Missing Supabase/CAPTCHA values are reported as warnings so the demo site can deploy before production services are connected.
+That command runs the standard Next.js production build. Missing Supabase/CAPTCHA values are allowed so the demo site can deploy before production services are connected.
 
 Set these variables in Vercel Project Settings > Environment Variables:
 
@@ -126,10 +144,7 @@ npm run vercel-build
 
 ## Production hardening checklist
 
-- Add Supabase Storage uploads for case photos, tip media, and report media.
-- Add Supabase SSR session validation for `/admin`.
-- Connect CAPTCHA verification in server actions.
+- Replace the demo CAPTCHA placeholder with a real Turnstile widget on public forms.
 - Add Vercel KV, Upstash, or Supabase Edge Function rate limiting.
-- Enforce upload validation server-side before storage writes.
 - Add duplicate detection workflow for pending cases.
-- Add audit logging on every admin mutation.
+- Expand admin pages for editing full case details and reading private media via signed URLs.

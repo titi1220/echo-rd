@@ -22,9 +22,11 @@ export function ProvinceSelect() {
 }
 
 export function CaptchaNotice() {
+  const isConfigured = Boolean(process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY);
+
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs leading-5 text-slate-600">
-      CAPTCHA listo para produccion: conecte `NEXT_PUBLIC_CAPTCHA_SITE_KEY` y valide `captcha_token` en el servidor antes de guardar.
+      {isConfigured ? "CAPTCHA configurado para produccion." : "CAPTCHA demo activo. Configure las llaves antes del lanzamiento publico."}
       <input type="hidden" name="captcha_token" value="demo-captcha-token" />
     </div>
   );

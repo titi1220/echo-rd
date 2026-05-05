@@ -1,5 +1,23 @@
 create extension if not exists "pgcrypto";
 
+do $$
+begin
+  insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+  values ('case-photos', 'case-photos', true, 5242880, array['image/jpeg', 'image/png', 'image/webp'])
+  on conflict (id) do nothing;
+
+  insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+  values ('tip-media', 'tip-media', false, 26214400, array['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/quicktime', 'video/webm'])
+  on conflict (id) do nothing;
+
+  insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+  values ('sighting-media', 'sighting-media', false, 26214400, array['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/quicktime', 'video/webm'])
+  on conflict (id) do nothing;
+exception
+  when undefined_table then
+    raise notice 'Storage schema not available yet. Create buckets manually in Supabase Storage.';
+end $$;
+
 create type case_status as enum (
   'pending',
   'active',
@@ -182,6 +200,30 @@ create policy "Editors manage resources"
 on public.resources for all
 using (public.current_admin_role() in ('super_admin', 'editor'))
 with check (public.current_admin_role() in ('super_admin', 'editor'));
+
+create policy "Public reads case photos"
+on storage.objects for select
+using (bucket_id = 'case-photos');
+
+create policy "Authenticated uploads case photos"
+on storage.objects for insert
+with check (bucket_id = 'case-photos');
+
+create policy "Authenticated uploads private tip media"
+on storage.objects for insert
+with check (bucket_id = 'tip-media');
+
+create policy "Authenticated uploads private report media"
+on storage.objects for insert
+with check (bucket_id = 'sighting-media');
+
+create policy "Admins read private tip media"
+on storage.objects for select
+using (bucket_id = 'tip-media' and public.current_admin_role() in ('super_admin', 'moderator'));
+
+create policy "Admins read private report media"
+on storage.objects for select
+using (bucket_id = 'sighting-media' and public.current_admin_role() in ('super_admin', 'moderator'));
 
 insert into public.resources (title, description, phone, website, category) values
 ('Sistema Nacional de Atencion a Emergencias', 'Emergencias y asistencia inmediata.', '911', 'https://911.gob.do', 'Emergencia'),

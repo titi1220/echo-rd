@@ -1,6 +1,7 @@
 "use server";
 
-import { caseSubmissionSchema } from "@/lib/security";
+import { caseSubmissionSchema, verifyCaptcha } from "@/lib/security";
+import { uploadPrivateOrPublicFile } from "@/lib/storage";
 import { createServerSupabaseClient, hasSupabaseServerEnv } from "@/lib/supabase";
 import { makeSlug } from "@/lib/supabase-data";
 
@@ -12,12 +13,30 @@ export async function submitCase(_: { ok: boolean; message: string }, formData: 
     return { ok: false, message: "Revisa los campos requeridos y vuelve a intentar." };
   }
 
+  const captchaOk = await verifyCaptcha(parsed.data.captcha_token);
+  if (!captchaOk) {
+    return { ok: false, message: "No pudimos verificar el CAPTCHA." };
+  }
+
   if (!hasSupabaseServerEnv()) {
     return { ok: true, message: "Tu caso fue enviado para revision urgente." };
   }
 
   const data = parsed.data;
   const slug = `${makeSlug(data.full_name)}-${Date.now().toString(36)}`;
+  let photoUrl = "";
+  try {
+    photoUrl = await uploadPrivateOrPublicFile({
+      bucket: "case-photos",
+      file: formData.get("photo") as File | null,
+      folder: "pending-cases",
+      mode: "image",
+      isPublic: true
+    });
+  } catch {
+    return { ok: false, message: "La foto debe ser JPG, PNG o WebP y pesar menos de 5 MB." };
+  }
+
   const supabase = createServerSupabaseClient();
   const { error } = await supabase.from("cases").insert({
     slug,
@@ -26,6 +45,7 @@ export async function submitCase(_: { ok: boolean; message: string }, formData: 
     age: data.age,
     gender: data.gender,
     height: data.height,
+    photo_url: photoUrl,
     province: data.province,
     municipality: data.municipality,
     location_last_seen: data.location_last_seen,
