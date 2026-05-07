@@ -30,7 +30,7 @@ export const demoCases: MissingCase[] = [
     time_last_seen: "18:20",
     clothing_description: "Polo blanco, jeans azul oscuro y tenis negros.",
     physical_traits: "Cabello castano largo, lunar pequeno en la mejilla izquierda.",
-    circumstances: "Salio de clases y no regreso a casa. Su telefono dejo de responder esa noche.",
+    circumstances: "Salió de clases y no regresó a casa. Su teléfono dejó de responder esa noche.",
     contact_name: "Equipo Echo RD",
     contact_phone: "+1 809 000 0000",
     whatsapp: "+18090000000",
@@ -88,7 +88,7 @@ export const demoCases: MissingCase[] = [
     time_last_seen: "21:45",
     clothing_description: "Abrigo negro, camiseta roja y tenis blancos.",
     physical_traits: "Tatuaje pequeno en el antebrazo derecho.",
-    circumstances: "Ultima comunicacion por mensaje indicando que esperaba transporte.",
+    circumstances: "Última comunicación por mensaje indicando que esperaba transporte.",
     contact_name: "Equipo Echo RD",
     contact_phone: "+1 809 000 0000",
     whatsapp: "+18090000000",
@@ -145,7 +145,7 @@ export const demoCases: MissingCase[] = [
     date_last_seen: "2026-04-19",
     time_last_seen: "13:30",
     clothing_description: "Blusa verde, pantalon negro y cartera marron.",
-    physical_traits: "Cabello negro hasta los hombros, usa pulsera medica.",
+    physical_traits: "Cabello negro hasta los hombros, usa pulsera médica.",
     circumstances: "Tenia cita medica y no llego al centro de salud.",
     contact_name: "Equipo Echo RD",
     contact_phone: "+1 809 000 0000",
@@ -229,8 +229,8 @@ export const demoSightings: Sighting[] = [
 
 export const resources = [
   { title: "Sistema Nacional de Atencion a Emergencias", description: "Emergencias y asistencia inmediata.", phone: "911", website: "https://911.gob.do", category: "Emergencia" },
-  { title: "Policia Nacional", description: "Reporte formal y seguimiento institucional.", phone: "809-682-2151", website: "https://policianacional.gob.do", category: "Autoridad" },
-  { title: "Linea Vida", description: "Apoyo emocional y orientacion en crisis.", phone: "*462", website: "https://msp.gob.do", category: "Apoyo" }
+  { title: "Policía Nacional", description: "Reporte formal y seguimiento institucional.", phone: "809-682-2151", website: "https://policianacional.gob.do", category: "Autoridad" },
+  { title: "Línea Vida", description: "Apoyo emocional y orientación en crisis.", phone: "*462", website: "https://msp.gob.do", category: "Apoyo" }
 ];
 
 export function getCaseBySlug(slug: string) {

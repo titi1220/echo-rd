@@ -6,14 +6,14 @@ import { absoluteUrl } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: {
-    default: "Echo RD | Personas desaparecidas en Republica Dominicana",
+    default: "Echo RD | Personas desaparecidas en República Dominicana",
     template: "%s | Echo RD"
   },
-  description: "Plataforma civica para reportar, compartir y apoyar busquedas de personas desaparecidas en Republica Dominicana.",
+  description: "Plataforma cívica para reportar, compartir y apoyar búsquedas de personas desaparecidas en República Dominicana.",
   metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Echo RD",
-    description: "Cada minuto cuenta. Alertas y reportes de personas desaparecidas en Republica Dominicana.",
+    description: "Cada minuto cuenta. Alertas y reportes de personas desaparecidas en República Dominicana.",
     type: "website",
     locale: "es_DO"
   }

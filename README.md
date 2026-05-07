@@ -1,6 +1,6 @@
 # Echo RD
 
-Plataforma full-stack profesional para personas desaparecidas en Republica Dominicana.
+Plataforma full-stack profesional para personas desaparecidas en República Dominicana.
 
 ## Stack
 
@@ -21,7 +21,7 @@ Plataforma full-stack profesional para personas desaparecidas en Republica Domin
 - Formularios privados para pistas y reportes
 - Pagina de casos localizados
 - Contacto, privacidad, terminos y solicitud de correccion o retiro
-- Panel administrativo para revision de casos, pistas, reportes, analitica, actividad, recursos y roles
+- Panel administrativo para revisión de casos, pistas, reportes, analítica, actividad, recursos y roles
 - Esquema Supabase con politicas RLS en `supabase/schema.sql`
 - Seis registros realistas marcados como `DATOS DEMO`
 

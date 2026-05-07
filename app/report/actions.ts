@@ -19,7 +19,7 @@ export async function submitCase(_: { ok: boolean; message: string }, formData: 
   }
 
   if (!hasSupabaseServerEnv()) {
-    return { ok: true, message: "Tu caso fue enviado para revision urgente." };
+    return { ok: true, message: "Tu caso fue enviado para revisión urgente." };
   }
 
   const data = parsed.data;
@@ -68,5 +68,5 @@ export async function submitCase(_: { ok: boolean; message: string }, formData: 
     return { ok: false, message: "No pudimos guardar el caso. Intenta nuevamente o contacta a Echo RD." };
   }
 
-  return { ok: true, message: "Tu caso fue enviado para revision urgente." };
+  return { ok: true, message: "Tu caso fue enviado para revisión urgente." };
 }

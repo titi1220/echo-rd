@@ -16,17 +16,17 @@ const priorityLabel: Record<string, string> = {
 
 const sightingStatusLabel: Record<string, string> = {
   new: "Nuevo",
-  reviewing: "En revision",
-  credible: "Creible",
+  reviewing: "En revisión",
+  credible: "Creíble",
   false_lead: "Pista falsa",
   forwarded: "Enviado",
   archived: "Archivado"
 };
 
 const roles = [
-  ["Super administrador", "Gestiona administradores, aprueba o rechaza casos, edita, elimina, archiva, revisa datos privados y administra recursos y pagina principal."],
+  ["Super administrador", "Gestiona administradores, aprueba o rechaza casos, edita, elimina, archiva, revisa datos privados y administra recursos y página principal."],
   ["Moderador", "Aprueba o rechaza casos, revisa pistas y reportes, marca casos urgentes o localizados, y agrega notas internas."],
-  ["Editor", "Corrige ortografia, actualiza contenido publico de casos y administra recursos publicos sin aprobar casos por defecto."]
+  ["Editor", "Corrige ortografía, actualiza contenido público de casos y administra recursos públicos sin aprobar casos por defecto."]
 ];
 
 const stats: Array<[string, number, LucideIcon]> = [
@@ -53,9 +53,9 @@ export default async function AdminPage() {
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <p className="text-sm font-black uppercase tracking-wide text-alert">Requiere autenticacion de Supabase</p>
+          <p className="text-sm font-black uppercase tracking-wide text-alert">Requiere autenticación de Supabase</p>
           <h1 className="mt-2 text-4xl font-black tracking-tight text-civic">Panel administrativo</h1>
-          <p className="mt-3 max-w-2xl leading-7 text-slate-600">Acceso por roles para super administradores, moderadores y editores. Los datos sensibles nunca se exponen publicamente.</p>
+          <p className="mt-3 max-w-2xl leading-7 text-slate-600">Acceso por roles para super administradores, moderadores y editores. Los datos sensibles nunca se exponen públicamente.</p>
         </div>
         <div className="rounded-2xl bg-civic p-4 text-white">
           <Lock className="mb-2" />
@@ -90,7 +90,7 @@ export default async function AdminPage() {
 
       <section className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
         <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <h2 className="flex items-center gap-2 text-xl font-black text-civic"><FileClock className="text-alert" /> Cola de revision de casos</h2>
+          <h2 className="flex items-center gap-2 text-xl font-black text-civic"><FileClock className="text-alert" /> Cola de revisión de casos</h2>
           <div className="mt-5 overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="text-xs uppercase text-slate-500"><tr><th className="py-3">Caso</th><th>Estado</th><th>Provincia</th><th>Cola</th><th>Acciones</th></tr></thead>
@@ -100,7 +100,7 @@ export default async function AdminPage() {
                     <td className="py-4 font-black text-civic">{item.full_name}</td>
                     <td><StatusBadge status={item.status} /></td>
                     <td>{item.province}</td>
-                    <td>{["Reportes pendientes", "Necesita mas informacion", "Aprobado", "Rechazado", "Duplicado"][index]}</td>
+                    <td>{["Reportes pendientes", "Necesita más información", "Aprobado", "Rechazado", "Duplicado"][index]}</td>
                     <td className="space-x-2">
                       <AdminActionButton action={updateCaseStatus.bind(null, item.id, "active")}>Aprobar</AdminActionButton>
                       <AdminActionButton action={updateCaseStatus.bind(null, item.id, "urgent")} tone="red">Urgente</AdminActionButton>
@@ -131,10 +131,10 @@ export default async function AdminPage() {
         <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
           <h2 className="flex items-center gap-2 text-xl font-black text-civic"><MessageSquare className="text-royal" /> Bandeja de pistas</h2>
           <div className="mt-5 grid gap-3">
-            {["Posible reporte en parada de autobus", "Llamada con nueva informacion de ruta", "Solicitud familiar de correccion"].map((tip, index) => (
+            {["Posible reporte en parada de autobús", "Llamada con nueva información de ruta", "Solicitud familiar de corrección"].map((tip, index) => (
               <div key={tip} className="rounded-2xl border border-slate-200 p-4">
                 <div className="flex items-center justify-between"><p className="font-black text-civic">{tip}</p><Badge tone={index === 0 ? "red" : "blue"}>{index === 0 ? "Urgente" : "Revisado"}</Badge></div>
-                <p className="mt-2 text-sm text-slate-600">Los datos privados de quien envia la informacion quedan ocultos fuera de permisos administrativos.</p>
+                <p className="mt-2 text-sm text-slate-600">Los datos privados de quien envía la información quedan ocultos fuera de permisos administrativos.</p>
               </div>
             ))}
           </div>
@@ -157,7 +157,7 @@ export default async function AdminPage() {
                       <td><Badge tone={item.priority === "high" ? "red" : "blue"}>{priorityLabel[item.priority]}</Badge></td>
                       <td className="space-x-2">
                         <span>{sightingStatusLabel[item.status]}</span>
-                        <AdminActionButton action={updateSightingStatus.bind(null, item.id, "credible")} tone="green">Creible</AdminActionButton>
+                        <AdminActionButton action={updateSightingStatus.bind(null, item.id, "credible")} tone="green">Creíble</AdminActionButton>
                         <AdminActionButton action={updateSightingStatus.bind(null, item.id, "false_lead")} tone="red">Falsa</AdminActionButton>
                       </td>
                     </tr>
@@ -171,7 +171,7 @@ export default async function AdminPage() {
 
       <section className="mt-8 grid gap-6 lg:grid-cols-2">
         <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <h2 className="flex items-center gap-2 text-xl font-black text-civic"><BarChart3 className="text-royal" /> Analitica</h2>
+          <h2 className="flex items-center gap-2 text-xl font-black text-civic"><BarChart3 className="text-royal" /> Analítica</h2>
           <div className="mt-5 grid gap-3">
             {resources.map((item) => <div key={item.title} className="flex justify-between rounded-xl bg-slate-50 p-3"><span>{item.category}</span><span className="font-black text-royal">{item.phone}</span></div>)}
           </div>
@@ -182,7 +182,7 @@ export default async function AdminPage() {
             {cases.slice(0, 4).map((item) => (
               <div key={item.id} className="rounded-xl bg-slate-50 p-3">
                 <p className="font-bold text-civic">admin_demo actualizo {item.full_name}</p>
-                <p className="text-slate-500">Accion: {statusLabel(item.status)} | Notas: revision interna registrada</p>
+                <p className="text-slate-500">Acción: {statusLabel(item.status)} | Notas: revisión interna registrada</p>
               </div>
             ))}
           </div>

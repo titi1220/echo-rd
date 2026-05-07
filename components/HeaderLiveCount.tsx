@@ -10,10 +10,14 @@ export function HeaderLiveCount() {
     let cancelled = false;
 
     async function loadCount() {
-      const response = await fetch("/api/stats", { cache: "no-store" });
-      if (!response.ok) return;
-      const stats = (await response.json()) as { missing: number };
-      if (!cancelled) setCount(stats.missing);
+      try {
+        const response = await fetch("/api/stats", { cache: "no-store" });
+        if (!response.ok) return;
+        const stats = (await response.json()) as { missing: number };
+        if (!cancelled) setCount(stats.missing);
+      } catch {
+        if (!cancelled) setCount(null);
+      }
     }
 
     loadCount();
@@ -28,7 +32,7 @@ export function HeaderLiveCount() {
   return (
     <div className="hidden items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-2 text-xs font-black text-royal sm:flex" aria-live="polite">
       <Radio size={14} className="animate-pulse" />
-      {count ?? "--"} desaparecidos
+      {count === null ? "Cargando conteo" : `${count} desaparecidos`}
     </div>
   );
 }

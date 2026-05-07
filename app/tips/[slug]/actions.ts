@@ -16,7 +16,7 @@ export async function submitTip(_: { ok: boolean; message: string }, formData: F
   }
 
   if (!hasSupabaseServerEnv()) {
-    return { ok: true, message: "Gracias. Tu pista fue recibida de forma privada para revision." };
+    return { ok: true, message: "Gracias. Tu pista fue recibida de forma privada para revisión." };
   }
 
   const caseSlug = String(formData.get("case_slug") ?? "");
@@ -55,5 +55,5 @@ export async function submitTip(_: { ok: boolean; message: string }, formData: F
     return { ok: false, message: "No pudimos guardar la pista. Intenta nuevamente." };
   }
 
-  return { ok: true, message: "Gracias. Tu pista fue recibida de forma privada para revision." };
+  return { ok: true, message: "Gracias. Tu pista fue recibida de forma privada para revisión." };
 }

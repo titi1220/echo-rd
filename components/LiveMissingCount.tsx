@@ -34,6 +34,8 @@ export function LiveMissingCount({ initialMissing }: { initialMissing: number })
         if (!response.ok) return;
         const nextStats = (await response.json()) as Stats;
         if (!cancelled) setStats(nextStats);
+      } catch {
+        if (!cancelled) setStats((current) => current);
       } finally {
         if (!cancelled) setIsLoading(false);
       }

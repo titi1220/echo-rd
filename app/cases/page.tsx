@@ -22,7 +22,7 @@ export default async function CasesPage() {
         <div className="mt-3 flex justify-end">
           <select className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-royal">
             <option>Ordenar: urgentes primero</option>
-            <option>Ordenar: mas recientes</option>
+            <option>Ordenar: más recientes</option>
           </select>
         </div>
       </div>

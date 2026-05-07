@@ -38,7 +38,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="mt-8 grid gap-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-      <Field label="Correo electronico">
+      <Field label="Correo electrónico">
         <input name="email" type="email" className={inputClass} required />
       </Field>
       <Field label="Contrasena">

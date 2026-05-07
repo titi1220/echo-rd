@@ -1,6 +1,6 @@
 import { CaptchaNotice, Field, inputClass, textareaClass } from "@/components/FormElements";
 
-export const metadata = { title: "Correccion o retiro" };
+export const metadata = { title: "Corrección o retiro" };
 
 export default function RemovalRequestPage() {
   return (
@@ -9,7 +9,7 @@ export default function RemovalRequestPage() {
       <p className="mt-3 leading-7 text-slate-600">Usa este formulario para pedir correcciones, retiro de contenido o actualizaciones de privacidad.</p>
       <form className="mt-8 grid gap-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
         <Field label="Nombre"><input className={inputClass} required /></Field>
-        <Field label="Correo electronico"><input type="email" className={inputClass} required /></Field>
+        <Field label="Correo electrónico"><input type="email" className={inputClass} required /></Field>
         <Field label="Enlace del caso"><input type="url" className={inputClass} required /></Field>
         <Field label="Solicitud"><textarea className={textareaClass} required /></Field>
         <CaptchaNotice />

@@ -7,10 +7,10 @@ export function Footer() {
         <div className="md:col-span-2">
           <p className="text-xl font-black">Echo RD</p>
           <p className="mt-3 max-w-xl text-sm leading-6 text-blue-100">
-            Plataforma civica para difundir alertas, recibir pistas privadas y apoyar esfuerzos de reunificacion en Republica Dominicana.
+            Plataforma cívica para difundir alertas, recibir pistas privadas y apoyar esfuerzos de reunificación en República Dominicana.
           </p>
           <p className="mt-4 rounded-xl bg-white/10 p-3 text-xs leading-5 text-blue-50">
-            Echo RD no sustituye a la Policia Nacional, 911, Ministerio Publico ni otras autoridades competentes. En emergencias, contacte al 911 de inmediato.
+            Echo RD no sustituye a la Policía Nacional, 911, Ministerio Público ni otras autoridades competentes. En emergencias, contacte al 911 de inmediato.
           </p>
         </div>
         <div>
@@ -19,14 +19,14 @@ export function Footer() {
             <Link href="/cases">Casos activos</Link>
             <Link href="/report">Reportar caso</Link>
             <Link href="/found-safe">Localizados</Link>
-            <Link href="/removal-request">Correccion o retiro</Link>
+            <Link href="/removal-request">Corrección o retiro</Link>
           </div>
         </div>
         <div>
           <p className="font-bold">Legal</p>
           <div className="mt-3 grid gap-2 text-sm text-blue-100">
             <Link href="/privacy">Privacidad</Link>
-            <Link href="/terms">Terminos</Link>
+            <Link href="/terms">Términos</Link>
             <Link href="/contact">Contacto</Link>
           </div>
         </div>

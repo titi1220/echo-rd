@@ -12,7 +12,7 @@ export function TipForm({ caseSlug }: { caseSlug: string }) {
       <Field label="Mensaje"><textarea name="message" className={textareaClass} required /></Field>
       <div className="grid gap-4 md:grid-cols-3">
         <Field label="Nombre opcional"><input name="sender_name" className={inputClass} /></Field>
-        <Field label="Telefono opcional"><input name="sender_phone" className={inputClass} /></Field>
+        <Field label="Teléfono opcional"><input name="sender_phone" className={inputClass} /></Field>
         <Field label="WhatsApp opcional"><input name="whatsapp" className={inputClass} /></Field>
       </div>
       <Field label="Subir imagen o video opcional">

@@ -12,7 +12,7 @@ export default function ReportPage() {
         <p className="text-sm font-black uppercase tracking-wide text-alert">Reporte seguro</p>
         <h1 className="mt-2 text-4xl font-black tracking-tight text-civic">Reportar persona desaparecida</h1>
         <p className="mt-3 max-w-3xl leading-7 text-slate-600">
-          Los casos enviados entran como pending y pasan por revision urgente antes de publicarse. En emergencias, contacte al 911.
+          Los casos enviados entran como pendientes y pasan por revisión urgente antes de publicarse. Echo RD no reemplaza a la Policía Nacional ni al 911.
         </p>
       </div>
       <ReportForm />

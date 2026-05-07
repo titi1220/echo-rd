@@ -17,7 +17,7 @@ export function statusLabel(status: string) {
     archived: "Archivado",
     rejected: "Rechazado",
     duplicate: "Duplicado",
-    needs_more_info: "Necesita mas informacion"
+    needs_more_info: "Necesita más información"
   };
   return labels[status] ?? status;
 }

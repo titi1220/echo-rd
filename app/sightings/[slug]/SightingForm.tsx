@@ -22,7 +22,7 @@ export function SightingForm({ caseSlug }: { caseSlug: string }) {
         <Field label="Enlace externo"><input name="external_link" type="url" className={inputClass} /></Field>
         <Field label="Enlace de Google Maps"><input name="maps_link" type="url" className={inputClass} /></Field>
         <Field label="Nombre opcional"><input name="sender_name" className={inputClass} /></Field>
-        <Field label="Telefono opcional"><input name="sender_phone" className={inputClass} /></Field>
+        <Field label="Teléfono opcional"><input name="sender_phone" className={inputClass} /></Field>
         <Field label="WhatsApp opcional"><input name="whatsapp" className={inputClass} /></Field>
       </div>
       <label className="flex gap-3 text-sm font-semibold text-slate-700">

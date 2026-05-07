@@ -20,11 +20,11 @@ export default async function HomePage() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.05fr_.95fr] md:py-20 lg:px-8">
           <div className="flex flex-col justify-center">
             <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-bold text-royal">
-              <ShieldCheck size={17} /> Plataforma civica segura
+              <ShieldCheck size={17} /> Plataforma cívica segura
             </div>
             <h1 className="max-w-3xl text-5xl font-black tracking-tight text-civic sm:text-6xl">Cada minuto cuenta.</h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-              Ayudamos a familias a reportar, compartir y encontrar personas desaparecidas en Republica Dominicana.
+              Ayudamos a familias a reportar, compartir y encontrar personas desaparecidas en República Dominicana.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/report" className="inline-flex items-center justify-center gap-2 rounded-xl bg-alert px-6 py-4 font-black text-white shadow-lg shadow-red-900/20">
@@ -58,7 +58,7 @@ export default async function HomePage() {
           <Link href="/cases" className="text-sm font-black text-royal">Ver todos</Link>
         </div>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {urgent.map((item) => <CaseCard key={item.id} item={item} />)}
+          {urgent.map((item, index) => <CaseCard key={item.id} item={item} priority={index === 0} />)}
         </div>
       </section>
 
@@ -67,7 +67,7 @@ export default async function HomePage() {
           <div className="mb-6 flex items-end justify-between">
             <div>
               <p className="text-sm font-black uppercase tracking-wide text-royal">Actualizaciones</p>
-              <h2 className="text-3xl font-black tracking-tight text-civic">Recien agregados</h2>
+              <h2 className="text-3xl font-black tracking-tight text-civic">Recién agregados</h2>
             </div>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
@@ -79,15 +79,15 @@ export default async function HomePage() {
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-2 lg:px-8">
         <div className="rounded-3xl bg-emerald-50 p-6 shadow-sm ring-1 ring-emerald-100">
           <CheckCircle2 className="text-emerald-700" size={32} />
-          <h2 className="mt-4 text-2xl font-black text-civic">Historias de localizacion</h2>
-          <p className="mt-3 leading-7 text-slate-600">Compartimos resoluciones con respeto, privacidad y enfoque en la reunificacion familiar.</p>
+          <h2 className="mt-4 text-2xl font-black text-civic">Historias de localización</h2>
+          <p className="mt-3 leading-7 text-slate-600">Compartimos resoluciones con respeto, privacidad y enfoque en la reunificación familiar.</p>
           <Link href="/found-safe" className="mt-5 inline-flex font-black text-emerald-700">Ver casos localizados</Link>
         </div>
         <div className="grid gap-3">
           {[
-            ["Reporta", "La familia envia informacion y consentimiento.", Clock],
-            ["Verificamos", "Moderadores revisan duplicados, riesgos y datos publicos.", ShieldCheck],
-            ["Difundimos", "La comunidad comparte y envia pistas privadas.", HeartHandshake]
+            ["Reporta", "La familia envía información y consentimiento.", Clock],
+            ["Verificamos", "Moderadores revisan duplicados, riesgos y datos públicos.", ShieldCheck],
+            ["Difundimos", "La comunidad comparte y envía pistas privadas.", HeartHandshake]
           ].map(([title, text, Icon]) => (
             <div key={String(title)} className="flex gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
               <Icon className="mt-1 text-royal" size={24} />
