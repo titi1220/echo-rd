@@ -20,17 +20,22 @@ export function LoginForm() {
       const email = String(formData.get("email") ?? "");
       const password = String(formData.get("password") ?? "");
       const supabase = createBrowserSupabaseClient();
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         setMessage("No pudimos iniciar sesion. Verifica el correo y la contrasena.");
         return;
       }
 
+      if (!data.user) {
+        setMessage("No pudimos confirmar la cuenta. Verifica el correo y la contrasena.");
+        return;
+      }
+
       router.push("/admin");
       router.refresh();
-    } catch {
-      setMessage("Configura las variables de Supabase antes de iniciar sesion.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "No pudimos iniciar sesion en este momento.");
     } finally {
       setPending(false);
     }

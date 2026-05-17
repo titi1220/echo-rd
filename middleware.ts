@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { hasSupabasePublicEnv } from "@/lib/supabase";
 
 export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/admin")) {
@@ -10,7 +11,7 @@ export async function middleware(request: NextRequest) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!hasSupabasePublicEnv() || !supabaseUrl || !supabaseAnonKey) {
       return process.env.NODE_ENV === "production" ? NextResponse.redirect(new URL("/admin/login", request.url)) : NextResponse.next();
     }
 

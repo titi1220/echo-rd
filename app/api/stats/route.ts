@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { demoCases, demoSightings } from "@/lib/data";
+import { hasSupabaseServerEnv } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export async function GET() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!supabaseUrl || !serviceKey) {
+  if (!hasSupabaseServerEnv() || !supabaseUrl || !serviceKey) {
     return NextResponse.json(demoStats());
   }
 

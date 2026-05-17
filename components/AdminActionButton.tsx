@@ -7,11 +7,13 @@ import { useTransition } from "react";
 export function AdminActionButton({
   children,
   action,
-  tone = "blue"
+  tone = "blue",
+  confirmText
 }: {
   children: React.ReactNode;
   action: () => Promise<{ ok: boolean; message: string }>;
   tone?: "blue" | "red" | "green" | "gray";
+  confirmText?: string;
 }) {
   const router = useRouter();
   const [message, setMessage] = useState("");
@@ -22,6 +24,7 @@ export function AdminActionButton({
       <button
         disabled={pending}
         onClick={() => startTransition(async () => {
+          if (confirmText && !window.confirm(confirmText)) return;
           const result = await action();
           setMessage(result.message);
           if (result.ok) {

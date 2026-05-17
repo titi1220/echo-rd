@@ -18,27 +18,36 @@ exception
     raise notice 'Storage schema not available yet. Create buckets manually in Supabase Storage.';
 end $$;
 
-create type case_status as enum (
-  'pending',
-  'active',
-  'urgent',
-  'found_safe',
-  'archived',
-  'rejected',
-  'duplicate',
-  'needs_more_info'
-);
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'case_status') then
+    create type case_status as enum (
+      'pending',
+      'active',
+      'urgent',
+      'found_safe',
+      'archived',
+      'rejected',
+      'duplicate',
+      'needs_more_info'
+    );
+  end if;
 
-create type sighting_status as enum (
-  'new',
-  'reviewing',
-  'credible',
-  'false_lead',
-  'forwarded',
-  'archived'
-);
+  if not exists (select 1 from pg_type where typname = 'sighting_status') then
+    create type sighting_status as enum (
+      'new',
+      'reviewing',
+      'credible',
+      'false_lead',
+      'forwarded',
+      'archived'
+    );
+  end if;
 
-create type admin_role as enum ('super_admin', 'moderator', 'editor');
+  if not exists (select 1 from pg_type where typname = 'admin_role') then
+    create type admin_role as enum ('super_admin', 'moderator', 'editor');
+  end if;
+end $$;
 
 create table if not exists public.cases (
   id uuid primary key default gen_random_uuid(),
@@ -150,83 +159,117 @@ as $$
   select role from public.admins where id = auth.uid()
 $$;
 
+drop policy if exists "Public can read approved cases" on public.cases;
 create policy "Public can read approved cases"
 on public.cases for select
 using (status in ('active', 'urgent', 'found_safe') and verified = true);
 
+drop policy if exists "Public can submit pending cases" on public.cases;
 create policy "Public can submit pending cases"
 on public.cases for insert
 with check (status = 'pending' and verified = false);
 
+drop policy if exists "Admins can manage cases" on public.cases;
 create policy "Admins can manage cases"
 on public.cases for all
 using (public.current_admin_role() in ('super_admin', 'moderator', 'editor'))
 with check (public.current_admin_role() in ('super_admin', 'moderator', 'editor'));
 
+drop policy if exists "Public can submit tips" on public.tips;
 create policy "Public can submit tips"
 on public.tips for insert
 with check (true);
 
+drop policy if exists "Only admins can read tips" on public.tips;
 create policy "Only admins can read tips"
 on public.tips for select
 using (public.current_admin_role() in ('super_admin', 'moderator'));
 
+drop policy if exists "Public can submit sightings" on public.sightings;
 create policy "Public can submit sightings"
 on public.sightings for insert
 with check (status = 'new');
 
+drop policy if exists "Only admins can read sightings" on public.sightings;
 create policy "Only admins can read sightings"
 on public.sightings for select
 using (public.current_admin_role() in ('super_admin', 'moderator'));
 
+drop policy if exists "Super admins manage admins" on public.admins;
 create policy "Super admins manage admins"
 on public.admins for all
 using (public.current_admin_role() = 'super_admin')
 with check (public.current_admin_role() = 'super_admin');
 
+drop policy if exists "Admins read activity logs" on public.activity_logs;
 create policy "Admins read activity logs"
 on public.activity_logs for select
 using (public.current_admin_role() in ('super_admin', 'moderator', 'editor'));
 
+drop policy if exists "Admins insert activity logs" on public.activity_logs;
 create policy "Admins insert activity logs"
 on public.activity_logs for insert
 with check (public.current_admin_role() in ('super_admin', 'moderator', 'editor'));
 
+drop policy if exists "Public reads resources" on public.resources;
 create policy "Public reads resources"
 on public.resources for select
 using (true);
 
+drop policy if exists "Editors manage resources" on public.resources;
 create policy "Editors manage resources"
 on public.resources for all
 using (public.current_admin_role() in ('super_admin', 'editor'))
 with check (public.current_admin_role() in ('super_admin', 'editor'));
 
+drop policy if exists "Public reads case photos" on storage.objects;
 create policy "Public reads case photos"
 on storage.objects for select
 using (bucket_id = 'case-photos');
 
+drop policy if exists "Authenticated uploads case photos" on storage.objects;
 create policy "Authenticated uploads case photos"
 on storage.objects for insert
 with check (bucket_id = 'case-photos');
 
+drop policy if exists "Authenticated uploads private tip media" on storage.objects;
 create policy "Authenticated uploads private tip media"
 on storage.objects for insert
 with check (bucket_id = 'tip-media');
 
+drop policy if exists "Authenticated uploads private report media" on storage.objects;
 create policy "Authenticated uploads private report media"
 on storage.objects for insert
 with check (bucket_id = 'sighting-media');
 
+drop policy if exists "Admins read private tip media" on storage.objects;
 create policy "Admins read private tip media"
 on storage.objects for select
 using (bucket_id = 'tip-media' and public.current_admin_role() in ('super_admin', 'moderator'));
 
+drop policy if exists "Admins read private report media" on storage.objects;
 create policy "Admins read private report media"
 on storage.objects for select
 using (bucket_id = 'sighting-media' and public.current_admin_role() in ('super_admin', 'moderator'));
 
-insert into public.resources (title, description, phone, website, category) values
-('Sistema Nacional de Atencion a Emergencias', 'Emergencias y asistencia inmediata.', '911', 'https://911.gob.do', 'Emergencia'),
-('Policia Nacional', 'Reporte formal y seguimiento institucional.', '809-682-2151', 'https://policianacional.gob.do', 'Autoridad'),
-('Linea Vida', 'Apoyo emocional y orientacion en crisis.', '*462', 'https://msp.gob.do', 'Apoyo')
-on conflict do nothing;
+insert into public.resources (title, description, phone, website, category)
+select title, description, phone, website, category
+from (
+  values
+    ('Sistema Nacional de Atención a Emergencias', 'Emergencias y asistencia inmediata.', '911', 'https://911.gob.do', 'Emergencia'),
+    ('Policía Nacional', 'Reporte formal y seguimiento institucional.', '809-682-2151', 'https://policianacional.gob.do', 'Autoridad'),
+    ('Línea Vida', 'Apoyo emocional y orientación en crisis.', '*462', 'https://msp.gob.do', 'Apoyo')
+) as seed(title, description, phone, website, category)
+where not exists (
+  select 1 from public.resources where public.resources.title = seed.title
+);
+
+insert into public.admins (id, email, role)
+select
+  id,
+  email,
+  'super_admin'::admin_role
+from auth.users
+where email = 'jfurbaez1977@gmail.com'
+on conflict (id) do update
+set role = 'super_admin';

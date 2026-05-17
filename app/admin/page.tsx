@@ -1,6 +1,7 @@
 import { BarChart3, ClipboardCheck, Eye, FileClock, Lock, MessageSquare, ShieldCheck, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { updateCaseStatus, updateSightingStatus } from "@/app/admin/actions";
+import { deleteCase, updateCaseStatus, updateSightingStatus } from "@/app/admin/actions";
+import { AdminCaseForm } from "@/app/admin/AdminCaseForm";
 import { AdminActionButton } from "@/components/AdminActionButton";
 import { Badge, StatusBadge } from "@/components/Badge";
 import { LogoutButton } from "@/components/LogoutButton";
@@ -48,6 +49,7 @@ export default async function AdminPage() {
   const pending = cases.filter((item) => item.status === "pending").length;
   const found = cases.filter((item) => item.status === "found_safe").length;
   const canLogout = Boolean(admin && admin.id !== "demo-admin");
+  const adminLabel = admin && admin.id !== "demo-admin" ? `${admin.email} | ${admin.role}` : "Modo local de demostración";
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -59,7 +61,7 @@ export default async function AdminPage() {
         </div>
         <div className="rounded-2xl bg-civic p-4 text-white">
           <Lock className="mb-2" />
-          <p className="text-sm font-bold">{admin ? `${admin.email} | ${admin.role}` : "Modo demo local"}</p>
+          <p className="text-sm font-bold">{adminLabel}</p>
           {canLogout && <div className="mt-3"><LogoutButton /></div>}
         </div>
       </div>
@@ -88,14 +90,27 @@ export default async function AdminPage() {
         })}
       </section>
 
+      <section className="mt-8 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+        <div className="mb-5">
+          <h2 className="text-xl font-black text-civic">Agregar caso</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-600">Crea un caso directamente desde el panel. Si eliges Activo o Urgente, se publicará como verificado.</p>
+        </div>
+        <AdminCaseForm />
+      </section>
+
       <section className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
         <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <h2 className="flex items-center gap-2 text-xl font-black text-civic"><FileClock className="text-alert" /> Cola de revisión de casos</h2>
+          <h2 className="flex items-center gap-2 text-xl font-black text-civic"><FileClock className="text-alert" /> Gestión de casos</h2>
           <div className="mt-5 overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="text-xs uppercase text-slate-500"><tr><th className="py-3">Caso</th><th>Estado</th><th>Provincia</th><th>Cola</th><th>Acciones</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
-                {cases.slice(0, 5).map((item, index) => (
+                {cases.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center font-bold text-slate-500">No hay casos todavía. Agrega el primero desde el formulario.</td>
+                  </tr>
+                )}
+                {cases.slice(0, 10).map((item, index) => (
                   <tr key={item.id}>
                     <td className="py-4 font-black text-civic">{item.full_name}</td>
                     <td><StatusBadge status={item.status} /></td>
@@ -105,7 +120,9 @@ export default async function AdminPage() {
                       <AdminActionButton action={updateCaseStatus.bind(null, item.id, "active")}>Aprobar</AdminActionButton>
                       <AdminActionButton action={updateCaseStatus.bind(null, item.id, "urgent")} tone="red">Urgente</AdminActionButton>
                       <AdminActionButton action={updateCaseStatus.bind(null, item.id, "found_safe")} tone="green">Localizado</AdminActionButton>
+                      <AdminActionButton action={updateCaseStatus.bind(null, item.id, "archived")} tone="gray">Archivar</AdminActionButton>
                       <AdminActionButton action={updateCaseStatus.bind(null, item.id, "rejected")} tone="gray">Rechazar</AdminActionButton>
+                      <AdminActionButton action={deleteCase.bind(null, item.id)} tone="red" confirmText={`Eliminar definitivamente el caso de ${item.full_name}?`}>Eliminar</AdminActionButton>
                     </td>
                   </tr>
                 ))}
